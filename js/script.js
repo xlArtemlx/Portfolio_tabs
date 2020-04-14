@@ -120,16 +120,9 @@ window.addEventListener('DOMContentLoaded', function() {
         event.preventDefault(); //отменяет перезагрузку страницы
         form.appendChild(statusMessage);
 
-        let request = new XMLHttpRequest();
-        request.open('POST','serever.php');
-        request.setRequestHeader('Content-type','aplication/json; charset=utf-8');
-
-
-        let formData = new FormData(form);
-        
-        
-
-        let obj = {};
+        let request = new XMLHttpRequest(),
+            formData = new FormData(form),
+            obj = {};
 
         formData.forEach(function(value,key){
             obj[key]= value;
@@ -151,7 +144,51 @@ window.addEventListener('DOMContentLoaded', function() {
         for(let i = 0; i < input.length;i++){
             input[i]= '';
         };
-    })
+    });
 
+    //slider
+    let slideIndex = 1,
+        slides = document.querySelectorAll('.slider-item'),
+        prev = document.querySelector('.prev'),
+        next = document.querySelector('.next'),
+        dotsWrap = document.querySelector('.slider-dots'),
+        dots = document.querySelectorAll('.dot');
+
+    showSlides(slideIndex);
+
+    function showSlides(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        slides.forEach((item) => item.style.display = 'none');
+        dots.forEach((item) => item.classList.remove('dot-active'));
+        slides[slideIndex - 1].style.display = 'block';
+        dots[slideIndex - 1].classList.add('dot-active');
+    }
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n); 
+    }
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+    prev.addEventListener('click', function() {
+        plusSlides(-1);
+    });
+    next.addEventListener('click', function() {
+        plusSlides(1);
+    });
+
+    dotsWrap.addEventListener('click', function(event) {
+        for (let i = 0; i < dots.length + 1; i++) {
+            if (event.target.classList.contains('dot') && event.target == dots[i-1]) {
+                currentSlide(i);
+            }
+        }
+    });
 
 });
